@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,13 +5,27 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float walkSpeed = 5f;
+    public float runSpeed = 8f;
     private Vector2 moveInput;
+    private bool _isFacingRight = true; // Corrected the property name
+
+    public float CurrentMoveSpeed
+    {
+        get
+        {
+            if (IsMoving)
+            {
+                return IsRunning ? runSpeed : walkSpeed;
+            }
+            return 0; // Idle Speed is 0
+        }
+    }
 
     [SerializeField]
     private bool _isMoving = false;
     public bool IsMoving
     {
-        get { return _isMoving; }
+        get => _isMoving;
         private set
         {
             _isMoving = value;
@@ -25,11 +37,24 @@ public class PlayerController : MonoBehaviour
     private bool _isRunning = false;
     public bool IsRunning
     {
-        get { return _isRunning; }
+        get => _isRunning;
         set
         {
             _isRunning = value;
             animator.SetBool("isRunning", value);
+        }
+    }
+
+    public bool IsFacingRight
+    {
+        get => _isFacingRight;
+        private set
+        {
+            if (_isFacingRight != value)
+            {
+                _isFacingRight = value;
+                transform.localScale = new Vector3(-transform.localScale.x, 1, 1); // Corrected the Vector constructor
+            }
         }
     }
 
@@ -44,24 +69,30 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveInput.x * walkSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
         IsMoving = moveInput != Vector2.zero;
+        SetFacingDirection(moveInput); // Moved SetFacingDirection call to here with parameter
+    }
+
+    private void SetFacingDirection(Vector2 moveInput)
+    {
+        if (moveInput.x > 0 && !_isFacingRight) // Corrected the condition check
+        {
+            IsFacingRight = true;
+        }
+        else if (moveInput.x < 0 && _isFacingRight) // Corrected the condition check
+        {
+            IsFacingRight = false;
+        }
     }
 
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            IsRunning = true;
-        }
-        else if (context.canceled)
-        {
-            IsRunning = false;
-        }
+        IsRunning = context.ReadValueAsButton();
     }
 }
