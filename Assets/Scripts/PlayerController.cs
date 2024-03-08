@@ -6,24 +6,37 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float walkSpeed = 5f;
+    public float airWalkSpeed = 3f;
     public float runSpeed = 8f;
     public float jumpImpulse = 10f;
 
     private Vector2 moveInput;
 
     private bool _isFacingRight = true; // Corrected the property name
-    TouchingDirections touchingDirections; 
+    TouchingDirections touchingDirections;
     public float CurrentMoveSpeed
     {
         get
         {
-            if (IsMoving && !touchingDirections.IsOnWall)
+            if (IsMoving)
             {
-                return IsRunning ? runSpeed : walkSpeed;
+                if (touchingDirections.IsGrounded && !touchingDirections.IsOnWall)
+                {
+                    // On ground and not touching the wall
+                    return IsRunning ? runSpeed : walkSpeed;
+                }
+                else if (!touchingDirections.IsGrounded)
+                {
+                    // In air
+                    return airWalkSpeed;
+                }
             }
-            return 0; // Idle Speed is 0
+
+            // Idle or on wall, speed is 0
+            return 0;
         }
     }
+
 
     [SerializeField]
     private bool _isMoving = false;
