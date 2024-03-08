@@ -1,19 +1,23 @@
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D),typeof(TouchingDirections))]
 public class PlayerController : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
-    private Vector2 moveInput;
-    private bool _isFacingRight = true; // Corrected the property name
+    public float jumpImpulse = 10f;
 
+    private Vector2 moveInput;
+
+    private bool _isFacingRight = true; // Corrected the property name
+    TouchingDirections touchingDirections; 
     public float CurrentMoveSpeed
     {
         get
         {
-            if (IsMoving)
+            if (IsMoving && !touchingDirections.IsOnWall)
             {
                 return IsRunning ? runSpeed : walkSpeed;
             }
@@ -29,7 +33,7 @@ public class PlayerController : MonoBehaviour
         private set
         {
             _isMoving = value;
-            animator.SetBool("isMoving", value);
+            animator.SetBool(AnimationStrings.isMoving, value);
         }
     }
 
@@ -41,7 +45,7 @@ public class PlayerController : MonoBehaviour
         set
         {
             _isRunning = value;
-            animator.SetBool("isRunning", value);
+            animator.SetBool(AnimationStrings.isRunning, value);
         }
     }
 
@@ -65,11 +69,15 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        touchingDirections = GetComponent<TouchingDirections>();
+
     }
 
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+
+        animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -94,5 +102,14 @@ public class PlayerController : MonoBehaviour
     public void OnRun(InputAction.CallbackContext context)
     {
         IsRunning = context.ReadValueAsButton();
+    }
+    
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        //todo check if alive as well
+        if (context.started && touchingDirections.IsGrounded) {
+            animator.SetTrigger(AnimationStrings.jump);
+            rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+        }
     }
 }
