@@ -1,14 +1,25 @@
-using System.Collections.Specialized;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Photon.Pun;
+using System;
+using System.Runtime.InteropServices;
+using TMPro;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D),typeof(TouchingDirections))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPun, IPunObservable
 {
     public float walkSpeed = 5f;
     public float airWalkSpeed = 3f;
     public float runSpeed = 8f;
     public float jumpImpulse = 10f;
+    public PhotonView pv;
+    public TMP_Text nameText;
+    private Vector3 smoothMove;
+    public GameObject sceneCamera;
+    public GameObject playerCamera;
 
     private Vector2 moveInput;
 
@@ -83,7 +94,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
-
+        pv = GetComponent<PhotonView>();
     }
 
     private void FixedUpdate()
@@ -95,9 +106,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if(photonView.IsMine){
         moveInput = context.ReadValue<Vector2>();
         IsMoving = moveInput != Vector2.zero;
         SetFacingDirection(moveInput); // Moved SetFacingDirection call to here with parameter
+        }
     }
 
     private void SetFacingDirection(Vector2 moveInput)
@@ -114,15 +127,59 @@ public class PlayerController : MonoBehaviour
 
     public void OnRun(InputAction.CallbackContext context)
     {
+        if(photonView.IsMine){
         IsRunning = context.ReadValueAsButton();
+        }
     }
     
     public void OnJump(InputAction.CallbackContext context)
     {
         //todo check if alive as well
+        if(photonView.IsMine){
         if (context.started && touchingDirections.IsGrounded) {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+        }
+        }
+    }
+        void Start(){
+        if(photonView.IsMine){
+         nameText.text = PhotonNetwork.NickName;
+        sceneCamera.SetActive(false);
+        playerCamera.SetActive(true);
+
+        } else{
+            nameText.text = pv.Owner.NickName;
+            playerCamera.SetActive(false);
+        }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        if(photonView.IsMine){
+                checkInput();
+        }else {
+                smootNetMovement();
+    }
+    }
+
+    private void smootNetMovement()
+    {
+        transform.position = Vector3.Lerp(transform.position, smoothMove, Time.deltaTime * 10);
+    }
+    private void checkInput()
+    {
+        float verticalMovement =0f;
+        var move = new Vector3(Input.GetAxisRaw("Horizontal"), verticalMovement, 0f);
+        transform.position += move * runSpeed * Time.deltaTime;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if(stream.IsWriting){
+            stream.SendNext(transform.position);
+        }else if(stream.IsReading){
+            smoothMove = (Vector3) stream.ReceiveNext();
         }
     }
 }
