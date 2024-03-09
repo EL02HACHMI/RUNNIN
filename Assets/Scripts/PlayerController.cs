@@ -103,13 +103,14 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
-
+    [PunRPC]
     public void OnMove(InputAction.CallbackContext context)
     {
         if(photonView.IsMine){
         moveInput = context.ReadValue<Vector2>();
         IsMoving = moveInput != Vector2.zero;
         SetFacingDirection(moveInput); // Moved SetFacingDirection call to here with parameter
+        
         }
     }
 
@@ -124,14 +125,23 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             IsFacingRight = false;
         }
     }
-
+    [PunRPC]
     public void OnRun(InputAction.CallbackContext context)
     {
         if(photonView.IsMine){
         IsRunning = context.ReadValueAsButton();
+            
         }
     }
-    
+
+
+    [PunRPC]
+    void PerformJump()
+    {
+        animator.SetTrigger(AnimationStrings.jump);
+        rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+    }
+
     public void OnJump(InputAction.CallbackContext context)
     {
         //todo check if alive as well
@@ -139,7 +149,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (context.started && touchingDirections.IsGrounded) {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
-        }
+            photonView.RPC(AnimationStrings.jump, RpcTarget.All);
+
+            }
         }
     }
         void Start(){
@@ -174,12 +186,40 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         transform.position += move * runSpeed * Time.deltaTime;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    
+     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if(stream.IsWriting){
             stream.SendNext(transform.position);
         }else if(stream.IsReading){
             smoothMove = (Vector3) stream.ReceiveNext();
         }
+        /*else if (stream.IsWriting)
+        {
+            stream.SendNext(animator.GetBool("isRunning"));
+        }
+        else
+        {
+            animator.SetBool("isRunning", (bool)stream.ReceiveNext());
+        */
     }
+    
+
+    /*[PunRPC]
+    void UpdateRunningState(bool isRunning)
+    {
+        animator.SetBool("isRunning", isRunning);
+    }
+
+    void HandleMovement()
+    {
+        if (photonView.IsMine)
+        {
+            bool run = Input.GetKey(KeyCode.LeftShift);
+            photonView.RPC("UpdateRunningState", RpcTarget.All, run);
+        }
+    }
+
+    */
+
 }
