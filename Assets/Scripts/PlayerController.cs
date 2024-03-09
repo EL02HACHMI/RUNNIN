@@ -18,14 +18,14 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if (IsMoving)
+            if (IsMoving && !touchingDirections.IsOnWall)
             {
-                if (touchingDirections.IsGrounded && !touchingDirections.IsOnWall)
+                if (touchingDirections.IsGrounded)
                 {
                     // On ground and not touching the wall
                     return IsRunning ? runSpeed : walkSpeed;
                 }
-                else if (!touchingDirections.IsGrounded)
+                else
                 {
                     // In air
                     return airWalkSpeed;

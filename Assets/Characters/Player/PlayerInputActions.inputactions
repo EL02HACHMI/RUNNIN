@@ -33,18 +33,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Run",
+                    "name": "Jump",
                     "type": "Button",
-                    "id": "d5d6a20b-8f5e-42cb-ad3b-f2e488a9c6c6",
+                    "id": "f0d10096-df3d-4d05-ba56-bb8cfce5698c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Jump",
+                    "name": "Run",
                     "type": "Button",
-                    "id": "f0d10096-df3d-4d05-ba56-bb8cfce5698c",
+                    "id": "be97de5a-e819-4485-98ac-1250cbceb321",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -274,23 +274,23 @@
                 },
                 {
                     "name": "",
-                    "id": "80dc96ed-e06f-495a-8cff-189ea764c630",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "a93cee8e-b71c-439b-8d4c-91c85628b48a",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7140d887-c4b5-4751-9c27-4d6c0b6d1d1c",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
