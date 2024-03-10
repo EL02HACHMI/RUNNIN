@@ -82,6 +82,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             {
                 _isFacingRight = value;
                 transform.localScale = new Vector3(-transform.localScale.x, 1, 1); // Corrected the Vector constructor
+//                pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+
             }
         }
     }
@@ -105,12 +107,13 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
 
     [PunRPC]
-    public void SyncAnimationStates(bool isRunning, bool isMoving)
+    public void SyncAnimationStates(bool isRunning, bool isMoving, bool isFacingRight)
     {
         IsRunning = isRunning;
         IsMoving = isMoving;
-        // Vous pouvez ajouter d'autres états d'animation si nécessaire
+        IsFacingRight = isFacingRight; // Assurez-vous de gérer correctement cette propriété
     }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -120,7 +123,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             IsMoving = moveInput != Vector2.zero;
             SetFacingDirection(moveInput);
             // Utilisez la propriété IsMoving directement dans l'appel RPC
-            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving);
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+
         }
     }
 
@@ -130,12 +134,13 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             IsFacingRight = true;
             nameText.transform.localScale = new Vector3(Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
+            //pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
         }
         else if (moveInput.x < 0 && _isFacingRight) // Corrected the condition check
         {
             IsFacingRight = false;
             nameText.transform.localScale = new Vector3(-Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
-
+          //  pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
         }
     }
     public void OnRun(InputAction.CallbackContext context)
@@ -144,7 +149,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             IsRunning = context.ReadValueAsButton();
             // Utilisez la propriété IsMoving directement dans l'appel RPC
-            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving);
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+
         }
     }
 
@@ -156,6 +162,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
     }
 
+    [PunRPC]
+
     public void OnJump(InputAction.CallbackContext context)
     {
         //todo check if alive as well
@@ -163,7 +171,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (context.started && touchingDirections.IsGrounded) {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
-
+                pv.RPC("TriggerJumpAnimation", RpcTarget.All);
             }
         }
     }
