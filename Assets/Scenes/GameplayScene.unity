@@ -29104,7 +29104,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 556765159076291672, guid: cb36329ef760d4747b9b4a407b0d5db6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 556765159076291678, guid: cb36329ef760d4747b9b4a407b0d5db6, type: 3}
       propertyPath: m_FlipX
@@ -29162,6 +29162,10 @@ PrefabInstance:
       propertyPath: sceneCamera
       value: 
       objectReference: {fileID: 519420028}
+    - target: {fileID: 7409614964017099188, guid: cb36329ef760d4747b9b4a407b0d5db6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: cb36329ef760d4747b9b4a407b0d5db6, type: 3}

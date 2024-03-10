@@ -103,7 +103,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
-    [PunRPC]
     public void OnMove(InputAction.CallbackContext context)
     {
         if(photonView.IsMine){
@@ -119,13 +118,15 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (moveInput.x > 0 && !_isFacingRight) // Corrected the condition check
         {
             IsFacingRight = true;
+            nameText.transform.localScale = new Vector3(Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
         }
         else if (moveInput.x < 0 && _isFacingRight) // Corrected the condition check
         {
             IsFacingRight = false;
+            nameText.transform.localScale = new Vector3(-Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
+
         }
     }
-    [PunRPC]
     public void OnRun(InputAction.CallbackContext context)
     {
         if(photonView.IsMine){
@@ -135,7 +136,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
 
 
-    [PunRPC]
     void PerformJump()
     {
         animator.SetTrigger(AnimationStrings.jump);
