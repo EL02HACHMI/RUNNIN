@@ -103,13 +103,24 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
+
+    [PunRPC]
+    public void SyncAnimationStates(bool isRunning, bool isMoving)
+    {
+        IsRunning = isRunning;
+        IsMoving = isMoving;
+        // Vous pouvez ajouter d'autres états d'animation si nécessaire
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
-        if(photonView.IsMine){
-        moveInput = context.ReadValue<Vector2>();
-        IsMoving = moveInput != Vector2.zero;
-        SetFacingDirection(moveInput); // Moved SetFacingDirection call to here with parameter
-        
+        if (photonView.IsMine)
+        {
+            moveInput = context.ReadValue<Vector2>();
+            IsMoving = moveInput != Vector2.zero;
+            SetFacingDirection(moveInput);
+            // Utilisez la propriété IsMoving directement dans l'appel RPC
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving);
         }
     }
 
@@ -129,11 +140,14 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if(photonView.IsMine){
-        IsRunning = context.ReadValueAsButton();
-            
+        if (photonView.IsMine)
+        {
+            IsRunning = context.ReadValueAsButton();
+            // Utilisez la propriété IsMoving directement dans l'appel RPC
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving);
         }
     }
+
 
 
     void PerformJump()
@@ -149,7 +163,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (context.started && touchingDirections.IsGrounded) {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
-            photonView.RPC(AnimationStrings.jump, RpcTarget.All);
 
             }
         }
@@ -194,32 +207,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }else if(stream.IsReading){
             smoothMove = (Vector3) stream.ReceiveNext();
         }
-        /*else if (stream.IsWriting)
-        {
-            stream.SendNext(animator.GetBool("isRunning"));
-        }
-        else
-        {
-            animator.SetBool("isRunning", (bool)stream.ReceiveNext());
-        */
     }
+
     
 
-    /*[PunRPC]
-    void UpdateRunningState(bool isRunning)
-    {
-        animator.SetBool("isRunning", isRunning);
-    }
-
-    void HandleMovement()
-    {
-        if (photonView.IsMine)
-        {
-            bool run = Input.GetKey(KeyCode.LeftShift);
-            photonView.RPC("UpdateRunningState", RpcTarget.All, run);
-        }
-    }
-
-    */
 
 }
