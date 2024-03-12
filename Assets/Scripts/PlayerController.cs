@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     {
         IsRunning = isRunning;
         IsMoving = isMoving;
-        IsFacingRight = isFacingRight; // Assurez-vous de gérer correctement cette propriété
+        IsFacingRight = isFacingRight; // Assurez-vous de gï¿½rer correctement cette propriï¿½tï¿½
     }
 
 
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             moveInput = context.ReadValue<Vector2>();
             IsMoving = moveInput != Vector2.zero;
             SetFacingDirection(moveInput);
-            // Utilisez la propriété IsMoving directement dans l'appel RPC
+            // Utilisez la propriï¿½tï¿½ IsMoving directement dans l'appel RPC
             pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
 
         }
@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (photonView.IsMine)
         {
             IsRunning = context.ReadValueAsButton();
-            // Utilisez la propriété IsMoving directement dans l'appel RPC
+            // Utilisez la propriï¿½tï¿½ IsMoving directement dans l'appel RPC
             pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
 
         }
@@ -178,8 +178,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         void Start(){
         if(photonView.IsMine){
          nameText.text = PhotonNetwork.NickName;
-        sceneCamera.SetActive(false);
-        playerCamera.SetActive(true);
+        sceneCamera.SetActive(true);
+        playerCamera.SetActive(false);
 
         } else{
             nameText.text = pv.Owner.NickName;
