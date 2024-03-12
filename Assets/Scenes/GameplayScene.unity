@@ -13005,7 +13005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &519420029
 AudioListener:
   m_ObjectHideFlags: 0
@@ -13483,6 +13483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 556765159076291672, guid: cb36329ef760d4747b9b4a407b0d5db6, type: 3}
+  startGameButton: {fileID: 0}
 --- !u!4 &1742375645
 Transform:
   m_ObjectHideFlags: 0

@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
         // Charge la scène de jeu pour tous les joueurs dans la salle
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("GamePlayScene");
+            PhotonNetwork.LoadLevel("GameplayScene");
         }
     }
 

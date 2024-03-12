@@ -285,6 +285,17 @@
                 },
                 {
                     "name": "",
+                    "id": "fa457353-18ee-4e75-b3b4-54cebe6a8c8c",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad;Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7140d887-c4b5-4751-9c27-4d6c0b6d1d1c",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
