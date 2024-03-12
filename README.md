@@ -1,2 +1,2 @@
 # RUNNIN
-2D Platformer game in Unity
+2D Platformer game multiplayer in Unity
