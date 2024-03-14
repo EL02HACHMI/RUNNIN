@@ -20,9 +20,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     private Vector3 smoothMove;
     public GameObject sceneCamera;
     public GameObject playerCamera;
-    private Vector3 respawnPoint;
+
     private Vector2 moveInput;
-    public GameObject fallDetector;
+
     private bool _isFacingRight = true; // Corrected the property name
     TouchingDirections touchingDirections;
     public float CurrentMoveSpeed
@@ -176,8 +176,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }
     }
         void Start(){
-        respawnPoint = transform.position;
-        if (photonView.IsMine){
+        if(photonView.IsMine){
          nameText.text = PhotonNetwork.NickName;
         sceneCamera.SetActive(true);
         playerCamera.SetActive(false);
@@ -195,8 +194,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }else {
                 smootNetMovement();
     }
-
-        fallDetector.transform.position = new Vector2(transform.position.x, fallDetector.transform.position.y);
     }
 
     private void smootNetMovement()
@@ -220,17 +217,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.tag == "FallDetector") {
-            transform.position = respawnPoint;
-        }else if(collision.tag == "Checkpoint")
-        {
-            respawnPoint = transform.position;
-        }
-    }
+    
 
 
-
-
-    }
+}
