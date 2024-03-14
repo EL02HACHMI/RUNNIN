@@ -29,7 +29,13 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
          spawnPlayer(); 
     }
 
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    void spawnPlayer()
+    {
+        PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
+    }
+
+
+    public void StartGame()
     {
         // Cette méthode est appelée chaque fois qu'un joueur rejoint la salle
         CheckPlayersReady();
@@ -54,8 +60,7 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
         }
     }
 
-    void spawnPlayer()
-    {
-        PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
-    }
+    
+    
+
 }
