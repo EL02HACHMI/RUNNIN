@@ -30,10 +30,15 @@ public class RoomManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
     void StartGame()
     {
         // Charge la scène de jeu pour tous les joueurs dans la salle
-            PhotonNetwork.LoadLevel("GameplayScene");
-            spawnPlayer();
+    if (PhotonNetwork.IsMasterClient)
+    {
+        PhotonNetwork.LoadLevel("TimingGame");
     }
-
+    }
+void Awake()
+{
+    PhotonNetwork.AutomaticallySyncScene = true;
+}
     void spawnPlayer()
     {
         PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);

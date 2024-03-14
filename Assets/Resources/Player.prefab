@@ -134,6 +134,7 @@ MonoBehaviour:
   nameText: {fileID: 1911836323688330564}
   sceneCamera: {fileID: 0}
   playerCamera: {fileID: 8927839230918210711}
+  fallDetector: {fileID: 0}
   _isMoving: 0
   _isRunning: 0
 --- !u!114 &7882795602067844645
