@@ -17,10 +17,16 @@ public class ParallaxEffect : MonoBehaviour
     private float ClippingPlane => cam.transform.position.z + (ZDistanceFromTarget > 0 ? cam.farClipPlane : cam.nearClipPlane);
 
     private void Start()
+{
+    if (followTarget == null)
     {
-        startingPosition = transform.position;
-        startingZ = transform.position.z;
+        followTarget = GameObject.FindWithTag("Player").transform; // Assurez-vous que votre joueur a le tag "Player"
     }
+
+    startingPosition = transform.position;
+    startingZ = transform.position.z;
+}
+
 
     private void Update()
     {

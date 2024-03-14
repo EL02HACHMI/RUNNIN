@@ -97,6 +97,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
         pv = GetComponent<PhotonView>();
+
+         if (fallDetector == null)
+    {
+        fallDetector = GameObject.FindWithTag("FallDetector"); // Remplacez "FallDetectorTag" par le tag réel que vous avez utilisé pour votre détecteur de chute.
+    }
     }
 
     private void FixedUpdate()
