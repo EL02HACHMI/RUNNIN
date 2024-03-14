@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI; // Ajoutez cette ligne pour utiliser le namespace UI
@@ -13,14 +12,12 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
 
     void Start()
     {
-        UnityEngine.Debug.Log("Le game Commencer ");
-
         // Assurez-vous que seul le hôte voit le bouton au début
         if (PhotonNetwork.IsMasterClient)
         {
             startGameButton.gameObject.SetActive(true);
-            startGameButton.interactable = true; // Le bouton est désactivé jusqu'à ce que les conditions soient remplies
-            // startGameButton.onClick.AddListener(StartGame); // Ajoute un écouteur d'événements au bouton
+            startGameButton.interactable = false; // Le bouton est désactivé jusqu'à ce que les conditions soient remplies
+            startGameButton.onClick.AddListener(StartGame); // Ajoute un écouteur d'événements au bouton
         }
         else
         {
@@ -33,15 +30,6 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
     }
 
     void spawnPlayer()
-<<<<<<< HEAD
-    {
-        PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
-    }
-
-
-    public void StartGame()
-=======
->>>>>>> 3105e8d (Bouton "Commencer" fixed)
     {
         PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
     }
@@ -49,9 +37,22 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
 
     public void StartGame()
     {
-        // Votre logique pour commencer le jeu, comme charger une nouvelle scène.
-        UnityEngine.Debug.Log("Le bouton Commencer a été cliqué.");
+        // Cette méthode est appelée chaque fois qu'un joueur rejoint la salle
+        CheckPlayersReady();
+    }
 
+    void CheckPlayersReady()
+    {
+        // Ici, vous pouvez vérifier le nombre de joueurs pour activer le bouton
+        // Remplacez 2 par le nombre minimum de joueurs requis pour démarrer le jeu
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 2) 
+        {
+            startGameButton.interactable = true;
+        }
+    }
+
+    void StartGame()
+    {
         // Charge la scène de jeu pour tous les joueurs dans la salle
         if (PhotonNetwork.IsMasterClient)
         {
@@ -59,26 +60,6 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
         }
     }
 
-<<<<<<< HEAD
-=======
-
-    void CheckPlayersReady()
-    {
-        // Ici, vous pouvez vérifier le nombre de joueurs pour activer le bouton
-        // Remplacez 2 par le nombre minimum de joueurs requis pour démarrer le jeu
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 1) 
-        {
-            startGameButton.interactable = true;
-        }
-    }
-
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        // Cette méthode est appelée chaque fois qu'un joueur rejoint la salle
-        CheckPlayersReady();
-    }
-
->>>>>>> 3105e8d (Bouton "Commencer" fixed)
     
     
 
