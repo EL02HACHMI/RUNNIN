@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     public TMP_Text nameText;
     private Vector3 smoothMove;
     public GameObject sceneCamera;
+    
     public GameObject playerCamera;
     private Vector3 respawnPoint;
     private Vector2 moveInput;
@@ -160,7 +161,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
 
 
-
+    [PunRPC]
     void PerformJump()
     {
         animator.SetTrigger(AnimationStrings.jump);
@@ -176,7 +177,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         if (context.started && touchingDirections.IsGrounded) {
             animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
-                pv.RPC("TriggerJumpAnimation", RpcTarget.All);
+                pv.RPC("PerformJump", RpcTarget.All);
             }
         }
     }
@@ -191,6 +192,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             nameText.text = pv.Owner.NickName;
             playerCamera.SetActive(false);
         }
+
+    
+
     }
     // Update is called once per frame
     void Update()
