@@ -32,10 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
          spawnPlayer(); 
     }
 
-    void spawnPlayer()
-    {
-        PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
-    }
+    
 
 
     public void StartGame()
@@ -67,7 +64,29 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
         CheckPlayersReady();
     }
 
-    
+    void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        spawnPlayer();
+    }
+
+    void spawnPlayer()
+    {
+       if (PhotonNetwork.IsConnectedAndReady)
+       {
+            PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation);
+        }
+    }
+
     
 
 }
