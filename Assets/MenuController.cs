@@ -12,6 +12,9 @@ public class MenuController : MonoBehaviour
 [SerializeField] private GameObject UsernameMenu;
 [SerializeField] private TMP_InputField UsernameInput;
 [SerializeField] private GameObject StartButton;
+ [SerializeField] private Slider volumeSlider = null;
+ [SerializeField] private TextMeshProUGUI volumeTextUI;
+ public GameObject ReglageMenu;
 
 private void Awake(){
          // Pré-remplir le champ de saisie avec le dernier nom d'utilisateur sauvegardé
@@ -40,5 +43,32 @@ public void SetUserName(){
 }
 public void ShowUserNameMenu(){
     UsernameMenu.SetActive(true);
+}
+public void Start(){
+    LoadValues();
+    HideSettings();
+}
+ public void VolumeSlider(float volume){
+       float volumePercentage = volume * 100f;
+    volumeTextUI.text = volumePercentage.ToString("0");
+ }
+ public void SaveVolumeButton(){
+    float volumeValue = volumeSlider.value;
+    PlayerPrefs.SetFloat("VolumeValue", volumeValue);
+    LoadValues();
+ }
+ void LoadValues(){
+    float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+    volumeSlider.value = volumeValue;
+    AudioListener.volume = volumeValue;
+ }
+ public void HideSettings(){
+   ReglageMenu.SetActive(false);
+ }
+ public void ShowSettings(){
+   ReglageMenu.SetActive(true);
+ }
+public void QuitterJeu(){
+        Application.Quit();
 }
 }
