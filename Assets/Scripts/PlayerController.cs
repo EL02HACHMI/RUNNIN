@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     public float airWalkSpeed = 3f;
     public float runSpeed = 8f;
     public float jumpImpulse = 10f;
+    public float crouchSpeed = 2.5f;
+
     public PhotonView pv;
     public TMP_Text nameText;
     private Vector3 smoothMove;
@@ -26,6 +28,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     public GameObject fallDetector;
     private bool _isFacingRight = true; // Corrected the property name
     TouchingDirections touchingDirections;
+
+    private bool isCrouching = false;
     public float CurrentMoveSpeed
     {
         get
@@ -206,7 +210,59 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     }
 
         fallDetector.transform.position = new Vector2(transform.position.x, fallDetector.transform.position.y);
+        
+    // /////////////////////////////////////////////////
+
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        Move(horizontalInput);
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            StartCrouch();
+        }
+        else if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            StopCrouch();
+        }
     }
+
+     private void Move(float horizontalInput)
+    {
+        // Move the player left or right
+        float moveSpeed = isCrouching ? crouchSpeed : walkSpeed;
+        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+
+        // Update the animator
+        if (horizontalInput != 0)
+        {
+            animator.SetBool("isMoving", true);
+            animator.SetBool("isCrouching", isCrouching);
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
+    }
+
+     private void StartCrouch()
+    {
+        isCrouching = true;
+        // Optionally, adjust the player's collider size
+        // Transition to crouch animation
+        animator.SetBool("isCrouching", true);
+    }
+
+    private void StopCrouch()
+    {
+        isCrouching = false;
+        // Optionally, reset the player's collider size
+        // Transition out of crouch animation
+        animator.SetBool("isCrouching", false);
+    }
+
+    // /////////////////////////////////////////////////
+
 
     private void smootNetMovement()
     {
