@@ -8,7 +8,7 @@ public class FinishLine : MonoBehaviour
     public TMP_Text winnerText; // Assign in the Inspector
     public TMP_Text timerText; // Assign in the Inspector
     private bool winnerDeclared = false;
-    private float countdown = 120f; // 2 minutes countdown
+    private float countdown = 20f; // 2 minutes countdown
     private bool startCountdown = false;
 
     private void Update()
