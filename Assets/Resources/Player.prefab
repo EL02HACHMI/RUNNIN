@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1508509654704735018}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,6 +130,7 @@ MonoBehaviour:
   airWalkSpeed: 3
   runSpeed: 8
   jumpImpulse: 10
+  crouchSpeed: 2.5
   pv: {fileID: 1508509654704735018}
   nameText: {fileID: 1911836323688330564}
   sceneCamera: {fileID: 0}

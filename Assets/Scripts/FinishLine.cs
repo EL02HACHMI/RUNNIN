@@ -1,35 +1,60 @@
 using UnityEngine;
-using Photon.Pun;
+using UnityEngine.UI;
+using System.Collections;
+using TMPro;
 
-public class FinishLine : MonoBehaviourPun
+public class FinishLine : MonoBehaviour
 {
+    public TMP_Text winnerText; // Assign in the Inspector
+    public TMP_Text timerText; // Assign in the Inspector
+    private bool winnerDeclared = false;
+    private float countdown = 120f; // 2 minutes countdown
+    private bool startCountdown = false;
+
+    private void Update()
+    {
+        if (startCountdown)
+        {
+            countdown -= Time.deltaTime;
+            timerText.text = "Time Left: " + Mathf.Round(countdown).ToString();
+
+            if (countdown <= 0)
+            {
+                EndGame();
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && PhotonNetwork.IsMasterClient)
+        if (!winnerDeclared && other.gameObject.CompareTag("Player"))
         {
-            // Suppose que chaque joueur a un PhotonView attaché.
-            string winnerName = other.GetComponent<PhotonView>().Owner.NickName;
-            photonView.RPC("NotifyVictory", RpcTarget.All, winnerName);
+            winnerDeclared = true;
+            startCountdown = true;
+            winnerText.text = other.name + " is the winner!";
+            winnerText.transform.parent.gameObject.SetActive(true);
+
+            // Disable the player's movement
+            PlayerController playerMovement = other.GetComponent<PlayerController>();
+            if (playerMovement != null)
+            {
+                playerMovement.SetMovement(false);
+            }
+
+            // Start the countdown for other players
+        }
+        else if (other.gameObject.CompareTag("Player"))
+        {
+            // For players finishing after the winner, you might still want to show their rank
+            // And possibly disable their movement if the game is ending
         }
     }
 
-    [PunRPC]
-    void NotifyVictory(string winnerName)
+    private void EndGame()
     {
-        Debug.Log(winnerName + " has won the race!");
-        // Optionnel : Afficher un écran de victoire ou une notification.
-        
-        // Le MasterClient charge la scène de lobby pour tout le monde après un court délai.
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // Assurez-vous que cette option est activée quelque part dans votre gestionnaire de réseau ou au démarrage du jeu.
-            PhotonNetwork.AutomaticallySyncScene = true; 
-            Invoke("LoadLobbyScene", 5f); // Délai de 5 secondes avant de charger la scène de lobby.
-        }
-    }
-
-    void LoadLobbyScene()
-    {
-        PhotonNetwork.LoadLevel("Lobby"); // Remplacez par le nom réel de votre scène de lobby.
+        // Logic to end the game if timer runs out
+        timerText.gameObject.SetActive(false); // Hide the timer
+        Debug.Log("Game Over");
+        // Optionally load a scene or show a game over screen
     }
 }

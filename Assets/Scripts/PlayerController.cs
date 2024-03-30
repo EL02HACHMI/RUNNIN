@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     public GameObject fallDetector;
     private bool _isFacingRight = true; // Corrected the property name
     TouchingDirections touchingDirections;
+    public bool canMove = true;
 
     private bool isCrouching = false;
     public float CurrentMoveSpeed
@@ -203,6 +204,8 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     // Update is called once per frame
     void Update()
     {
+    if(canMove){
+
         if(photonView.IsMine){
                 checkInput();
         }else {
@@ -211,7 +214,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
         fallDetector.transform.position = new Vector2(transform.position.x, fallDetector.transform.position.y);
         
-    // /////////////////////////////////////////////////
 
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -225,6 +227,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         {
             StopCrouch();
         }
+    }
+    }
+    public void SetMovement(bool enable)
+    {
+        canMove = enable;
     }
 
      private void Move(float horizontalInput)
@@ -294,8 +301,4 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             respawnPoint = transform.position;
         }
     }
-
-
-
-
-    }
+}
