@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     public GameObject fallDetector;
     private bool _isFacingRight = true; // Corrected the property name
     TouchingDirections touchingDirections;
-    public bool canMove = true;
 
     private bool isCrouching = false;
     public float CurrentMoveSpeed
@@ -128,7 +127,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if(canMove){
         if (photonView.IsMine)
         {
             moveInput = context.ReadValue<Vector2>();
@@ -138,12 +136,11 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
 
         }
-        }
+        
     }
 
     private void SetFacingDirection(Vector2 moveInput)
     {
-        if(canMove){
         if (moveInput.x > 0 && !_isFacingRight) // Corrected the condition check
         {
             IsFacingRight = true;
@@ -156,11 +153,9 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             nameText.transform.localScale = new Vector3(-Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
           //  pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
         }
-        }
     }
     public void OnRun(InputAction.CallbackContext context)
     {
-        if(canMove){
         if (photonView.IsMine)
         {
             IsRunning = context.ReadValueAsButton();
@@ -168,24 +163,20 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
 
         }
-        }
     }
 
 
     [PunRPC]
     void PerformJump()
     {
-        if(canMove){
         animator.SetTrigger(AnimationStrings.jump);
         rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
-        }
     }
 
     [PunRPC]
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if(canMove){
         //todo check if alive as well
         if(photonView.IsMine){
         if (context.started && touchingDirections.IsGrounded) {
@@ -193,7 +184,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
                 pv.RPC("PerformJump", RpcTarget.All);
             }
-        }
         }
     }
         void Start(){
@@ -212,8 +202,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
     // Update is called once per frame
     void Update()
     {
-    if(canMove){
-
         if(photonView.IsMine){
                 checkInput();
         }else {
@@ -236,16 +224,10 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             StopCrouch();
         }
     }
-    }
-    public void SetMovement(bool enable)
-    {
-        canMove = enable;
-    }
 
      private void Move(float horizontalInput)
     {
         // Move the player left or right
-        if(canMove){
         float moveSpeed = isCrouching ? crouchSpeed : walkSpeed;
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 
@@ -258,7 +240,6 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         else
         {
             animator.SetBool("isMoving", false);
-        }
         }
     }
 
@@ -283,17 +264,13 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
 
     private void smootNetMovement()
     {
-        if(canMove){
         transform.position = Vector3.Lerp(transform.position, smoothMove, Time.deltaTime * 10);
-        }
     }
     private void checkInput()
     {
-        if(canMove){
         float verticalMovement =0f;
         var move = new Vector3(Input.GetAxisRaw("Horizontal"), verticalMovement, 0f);
         transform.position += move * runSpeed * Time.deltaTime;
-        }
     }
 
     
