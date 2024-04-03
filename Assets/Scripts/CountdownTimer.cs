@@ -23,7 +23,9 @@ public class CountdownTimer : MonoBehaviour
         countdownText.text = "Commencez !";
         yield return new WaitForSeconds(1f); // Attendez une seconde avant de commencer
 
-        // Chargez la scène principale du jeu
+if (SceneManager.GetActiveScene().name != "GameplayScene")
+    {
         SceneManager.LoadScene("GameplayScene");
+    }
     }
 }

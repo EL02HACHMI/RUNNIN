@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
 {
     public GameObject playerPrefab;
     void Start(){
-            PhotonNetwork.AutomaticallySyncScene = true;
-
+        
+        PhotonNetwork.AutomaticallySyncScene = true;
          spawnPlayer(); 
     }
 

@@ -87,7 +87,12 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
             {
                 _isFacingRight = value;
                 transform.localScale = new Vector3(-transform.localScale.x, 1, 1); // Corrected the Vector constructor
-//                pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+                // Ajout pour flipper le texte du nom.
+            if (nameText != null) {
+                // Ceci inverse la transformation sur l'axe X uniquement pour le nomText.
+                nameText.transform.localScale = new Vector3(-nameText.transform.localScale.x, nameText.transform.localScale.y, nameText.transform.localScale.z);
+            }
+                pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
 
             }
         }
@@ -108,7 +113,7 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         fallDetector = GameObject.FindWithTag("FallDetector"); // Remplacez "FallDetectorTag" par le tag réel que vous avez utilisé pour votre détecteur de chute.
     }
     }
-
+    [PunRPC]
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
@@ -138,20 +143,20 @@ public class PlayerController : MonoBehaviourPun, IPunObservable
         }
         
     }
-
+    [PunRPC]
     private void SetFacingDirection(Vector2 moveInput)
     {
         if (moveInput.x > 0 && !_isFacingRight) // Corrected the condition check
         {
             IsFacingRight = true;
             nameText.transform.localScale = new Vector3(Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
-            //pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
         }
         else if (moveInput.x < 0 && _isFacingRight) // Corrected the condition check
         {
             IsFacingRight = false;
             nameText.transform.localScale = new Vector3(-Mathf.Abs(nameText.transform.localScale.x), nameText.transform.localScale.y, nameText.transform.localScale.z);
-          //  pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
+            pv.RPC("SyncAnimationStates", RpcTarget.All, IsRunning, IsMoving, _isFacingRight);
         }
     }
     public void OnRun(InputAction.CallbackContext context)

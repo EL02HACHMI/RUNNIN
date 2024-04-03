@@ -24,7 +24,7 @@ public class RoomManager : MonoBehaviourPunCallbacks // Changez MonoBehaviour à
             startGameButton.gameObject.SetActive(false); // Les joueurs non hôtes ne voient pas le bouton
         }
 
-         spawnPlayer(); 
+        spawnPlayer(); 
     }
 
     void StartGame()
