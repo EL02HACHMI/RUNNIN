@@ -15,7 +15,7 @@ public class Results : MonoBehaviour
     {
         // Récupérer le nombre de joueurs et afficher les résultats pour chaque joueur
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        float templateHeight = 1.2f;
+        float templateHeight = 6f;
         // Trier les joueurs par score décroissant
         Player[] sortedPlayers = PhotonNetwork.PlayerList.OrderByDescending(player =>
             PlayerPrefs.GetInt("PlayerScore_" + player.ActorNumber)).ToArray();
