@@ -36,7 +36,7 @@ public class FinishLine : MonoBehaviourPun
             pv.gameObject.GetComponentInChildren<TMP_Text>().gameObject.SetActive(true);
         }
             countdown -= Time.deltaTime;
-            //timerText.text = "Time Left: " + Mathf.Round(countdown).ToString();
+            timerText.text = "Time Left: " + Mathf.Round(countdown).ToString();
 
             if (countdown <= 0)
             {
