@@ -20,7 +20,7 @@ public class CountdownTimer : MonoBehaviour
             timeLeft -= 1f;
         }
 
-        countdownText.text = "Commencez !";
+        countdownText.text = "START !";
         yield return new WaitForSeconds(1f); // Attendez une seconde avant de commencer
 
 if (SceneManager.GetActiveScene().name != "GameplayScene")

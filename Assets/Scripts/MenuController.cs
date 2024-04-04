@@ -68,6 +68,9 @@ public void Start(){
  public void ShowSettings(){
    ReglageMenu.SetActive(true);
  }
+ public void HideUsername(){
+    UsernameMenu.SetActive(false);
+ }
 public void QuitterJeu(){
         Application.Quit();
 }

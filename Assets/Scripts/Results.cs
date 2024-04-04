@@ -4,6 +4,7 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Results : MonoBehaviour
 {
@@ -37,5 +38,8 @@ public class Results : MonoBehaviour
             resultObject.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text = playerName;
             resultObject.transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().text = playerScore.ToString();
         }
+    }
+    public void QuitGame(){
+        SceneManager.LoadScene("MainMenu");
     }
 }
